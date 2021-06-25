@@ -1,0 +1,37 @@
+## ------- 1 ------- <br>
+## Створити матрицю mat з 5 стовпцями та 10 строками за допомогою matrix з випадковими даними (функція rnorm(50)).<br>
+my_mat <- matrix(rnorm(50), nrow = 10)<br><br>
+## ------- 2 -------<br>
+## Знайти максимальне значення в кожному стовпці.<br>
+apply(mat, 2, my_max)<br><br>
+## ------- 3 -------<br>
+## Знайти середнє (mean) значення кожного стовпця.<br>
+colMeans(my_mat)<br>
+apply(my_mat, 2, mean)<br><br>
+## ------- 4 -------<br>
+## Знайти мінімальне значення в кожному рядку.<br>
+apply(my_mat, 1, min)<br><br>
+## ------- 5 -------<br>
+## Відсортувати кожен стовбець таблиці.<br>
+apply(my_mat, 2, sort)<br><br>
+## ------- 6 -------<br>
+## Знайти кількість значень < 0 для кожного стовпця<br>
+apply(my_mat, 2, function (x) sum(x < 0))<br><br>
+## ------- 7 -------<br>
+## Вивести вектор з булевими значеннями TRUE та FALSE. TRUE, якщо в стовпці є елементи >2, FALSE – якщо немає.<br>
+apply(my_mat, 2, function (x) any(x > 2))<br><br>
+## ------- 8 -------<br>
+## Створить список list1 <- list(observationA = c(1:5, 7:3), observationB = matrix(1:6, nrow=2)). <br>
+## Для цього списку знайдіть sum за допомогою lapply.<br><br>
+list1 <- list(observationA = c(1:5, 7:3), observationB = matrix(1:6, nrow=2))<br>
+lapply(list1, sum)<br><br>
+## ------- 9 -------<br>
+## Для кожного елементу списку list1 знайдіть максимальне та мінімальне значення (range) за допомогою lapply та sapply.<br><br>
+lapply(list1, range)<br>
+sapply(list1, range)<br><br>
+## ------- 10 -------<br>
+## Для вбудованого набору даних InsectSprays знайти середнє count для кожного spray.<br><br>
+aggregate(<br>
+  x=list(mean=InsectSprays$count), <br>
+  by=list(spray=InsectSprays$spray), <br>
+  FUN=mean)

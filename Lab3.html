@@ -1,0 +1,45 @@
+## ---------- 1 ---------- <br>
+## Функція add2(x, y), яка повертає суму двох чисел.<br><br>
+add2 <- function(x,y) {<br>
+  return (x+y)<br>
+}<br>
+add2(5,2)<br><br>
+
+## ---------- 2 ----------<br>
+## Функція above(x, n), яка приймає вектор та число n, та повертає всі елементі вектору, які більше n. <br>
+##По замовчуванню n = 10.<br><br>
+above <- function(x,n=10) {<br>
+  return (x[x > n])<br>
+}<br>
+test_vec <- c(4:15)<br>
+above(test_vec)<br>
+above(test_vec,5)<br>
+above(test_vec,100)<br><br>
+
+## ---------- 3 ----------<br>
+## Функція my_ifelse(x, exp, n), яка приймає вектор x, порівнює всі його елементи за допомогою exp з n, <br>
+##та повертає елементи вектору, які відповідають умові expression. <br>
+##Наприклад, my_ifelse(x, “>”, 0) повертає всі елементи x, які більші 0. <br>
+##Exp може дорівнювати “<”, “>”, “<=”, “>=”, “==”. Якщо exp не співпадає ні з одним з цих виразів, повертається вектор x.<br><br>
+my_ifelse <- function(x,expression,n) {<br>
+  if (expression == '>')  return (x[x>n]) <br>
+  if (expression == '<')  return (x[x<n]) <br>
+  if (expression == '>=') return (x[x>=n]) <br>
+  if (expression == '<=') return (x[x<=n]) <br>
+  if (expression == '==') return (x[x==n]) <br>
+  return (x) <br>
+}<br><br>
+
+my_ifelse(test_vec, '>=' ,12)<br><br>
+
+## ---------- 4 ----------<br>
+## Функція columnmean(x, removeNA), яка розраховує середнє значення (mean) по кожному стовпцю матриці, <br>
+##або data frame. Логічний параметр removeNA вказує, чи видаляти NA значення. По замовчуванню він дорівнює TRUE.<br><br>
+
+columnmean <- function(x,removeNA=TRUE) {<br>
+  apply(x, 2, function (column) mean(column, na.rm = removeNA))<br>
+}<br><br>
+
+my_matrix = cbind(c(1,1,4,NA,1), c(1,NA,1,4,4), c(0,1,1,1,1))<br>
+columnmean(my_matrix)<br>
+columnmean(my_matrix, FALSE)<br>

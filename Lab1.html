@@ -1,0 +1,49 @@
+## ---------- 1 ---------- <br>
+## Створити змінні базових (atomic) типів. Базові типи: character, numeric, integer, complex, logical. <br><br>
+my_character <- 'A' print(class(my_character)) <br>
+my_numeric <- 10 print(class(my_numeric)) <br>
+my_integer <- 100 print(class(my_integer)) <br>
+my_compl <- complex(real = stats::rnorm(2), imaginary = stats::rnorm(2)) print(class(my_compl)) <br>
+my_logic <- TRUE print(class(my_logic)) <br><br>
+
+## ---------- 2 ---------- <br>
+## Створити вектори, які: містить послідовність з 5 до 75; містить числа 3.14, 2.71, 0, 13; 100 значень TRUE. <br><br>
+my_vector1 <- c(5:75) <br>
+print(my_vector1) <br>
+my_vector2 <- c(3.14,2.71,0,13) <br>
+print(my_vector2) <br>
+my_vector3 <- rep(TRUE, times=100) <br>
+print(my-vector3) <br><br>
+
+## ---------- 3 ---------- <br>
+## Створити наступну матрицю за допомогою matrix, та за допомогою cbind або rbind <br><br>
+matrix_val <- c(0.5,3.9,0,2,1.3,131,2.2,7,3.5,2.8,4.6,5.1) <br>
+matrix(matrix_val, nrow = 4) <br>
+col1 <- matrix_val[1:4] <br>
+col2 <- matrix_val[5:8] <br>
+col3 <- matrix_val[9:12] <br>
+cbind(col1,col2,col3) <br><br>
+
+## ---------- 4 ---------- <br>
+## Створити довільний список (list), в який включити всі базові типи. <br><br>
+list(my_character,my_compl,my_integer,my_logic,my_numeric) <br><br>
+
+## ---------- 5 ---------- <br>
+## Створити фактор з трьома рівнями «baby», «child», «adult». <br><br>
+my_factor <- factor(c('baby', 'child', 'adult')) <br><br>
+
+## ---------- 6 ---------- <br>
+## Знайти індекс першого значення NA в векторі 1, 2, 3, 4, NA, 6, 7, NA, 9, NA, 11. Знайти кількість значень NA. <br><br>
+my_vec <- c(1, 2, 3, 4, NA, 6, 7, NA, 9, NA, 11) <br>
+print(match(NA,my_vec)) <br>
+print(sum(is.na(my_vec))) <br><br>
+
+## ---------- 7 ---------- <br>
+## Створити довільний data frame та вивести в консоль. <br><br>
+my_df <- data.frame(col1,col2) <br>
+my_df <br><br>
+
+## ---------- 8 ---------- <br>
+## Змінити імена стовпців цього data frame. <br><br>
+colnames(my_df) <- c('New1','New2') <br>
+my_df

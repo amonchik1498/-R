@@ -1,0 +1,41 @@
+df = read.csv("hw1_data.csv")<br><br>
+
+## ------- 1 -------<br>
+##Які назви стовпців файлу даних?<br>
+names(df)<br><br>
+
+## ------- 2 -------<br>
+## Виведіть перші 6 строк фрейму даних.<br>
+df[1:6,]<br><br>
+
+## ------- 3 -------<br>
+## Скільки спостерігань (строк) в дата фреймі?<br>
+nrow(df)<br><br>
+
+## ------- 4 -------<br>
+## Виведіть останні 10 строк дата фрейму.<br>
+tail(df,10)<br><br>
+
+## ------- 5 -------<br>
+## Як багато значень «NA» в стовпці «Ozone»?<br>
+sum(is.na(df$'Ozone'))<br><br>
+
+## ------- 6 -------<br>
+## Яке середнє (mean) стовпця «Ozone». Виключити «NA» значення.<br>
+mean(df$'Ozone',na.rm=TRUE)<br><br>
+
+## ------- 7 -------<br>
+## Виведіть частину набору даних (subset) зі значенням «Ozone» > 31 та «Temp» > 90. <br>
+##Яке середнє (mean) значень «Solar.R» в цьому наборі даних (subset)?<br><br>
+my_sub = subset(df, df$'Ozone' > 31 & df$'Temp' > 90)<br>
+mean(my_sub$'Solar.R')<br><br>
+
+## ------- 8 -------<br>
+## Яке середнє значення (mean) для «Temp» для червня («Month» дорівнює 6)?<br><br>
+dbjune = subset(df, df$'Month' == 6)<br>
+mean(dbjune$'Temp')<br><br>
+
+## ------- 9 -------<br>
+## Яке максимальне значення «Ozone» для травня («Month» дорівнює 5)?<br><br>
+dbmay = subset(df,df$'Month' == 5)<br>
+max(dbmay$'Ozone',na.rm=TRUE)

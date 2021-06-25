@@ -1,0 +1,172 @@
+## "olympics.csv"<br>
+library(stringr)<br><br>
+
+prep_set <- function(file_path){<br>
+  my_df <- read_file(file_path)<br>
+  my_df <- remove_invalid_rows(my_df)<br>
+  my_df <- rename_columns(my_df)<br>
+  my_df <- add_country_id(my_df)<br>
+  my_df <- trim_county_names(my_df)<br>
+  return (my_df)<br>
+}<br><br>
+
+read_file <- function(file_path){<br>
+  return (read.csv(file_path, skip = 1, header = TRUE, encoding="UTF-8", stringsAsFactors = FALSE))<br>
+}<br><br>
+
+remove_invalid_rows <- function(my_df){<br>
+  my_df <- remove_totals(my_df)<br>
+  return (my_df)<br>
+}<br><br>
+
+remove_totals <- function(my_df){<br>
+  return (my_df[!my_df[1] == "Totals", ])<br>
+}<br><br>
+
+rename_col <- function(my_df){<br>
+  for (col_name in colnames(my_df))<br>
+    names(my_df)[names(my_df) == col_name] <- get_new_col_name(col_name) <br>
+  return (my_df)<br>
+}<br><br>
+
+get_new_col_name <- function(old_col_name){<br><br>
+  
+  if (old_col_name == 'X') return ('Country')<br>
+  ## 'X..' -> ''<br>
+  if (grepl('X\\.\\.', old_col_name)) return (gsub(pattern = 'X\\.\\.',replacement = '',x = old_col_name))<br>
+  ## 'X01..' -> 'Gold'<br>
+  if (grepl('X01\\.\\.', old_col_name)) return (gsub(pattern = 'X01\\.\\.',replacement = 'Gold',x = old_col_name))<br>
+  ## 'X02..' -> 'Silver'<br>
+  if (grepl('X02\\.\\.', old_col_name)) return (gsub(pattern = 'X02\\.\\.',replacement = 'Silver',x = old_col_name))<br>
+  ## 'X03..' -> 'Bronze'<br>
+  if (grepl('X03\\.\\.', old_col_name)) return (gsub(pattern = 'X03\\.\\.',replacement = 'Bronze',x = old_col_name))<br>
+  ## else -> no changes<br>
+  return (old_col_name)<br>
+}<br><br>
+
+add_country_id <- function(my_df, column_name = 'Country'){<br>
+  my_df['ID'] <- str_match(df[[column_name]], '(.*\\()([A-Z0-9]{3})(\\).*)')[,3]<br>
+  return (my_df)<br>
+}<br><br>
+
+trim_county_names <- function(df, column_name = 'Country'){<br>
+  my_df[[column_name]] <- str_match(my_df[[column_name]], '([A-Za-z\\s]*)(\\s\\(.*)')[,2]<br>
+  return (my_df)<br>
+}<br><br>
+
+
+olympics <- prep_set("C:\\Users\\r123a\\Desktop\\R_CourseKNU\\olympics.csv")<br><br>
+
+answer_one <- function(my_df){<br>
+  return (my_df[df$'Gold' == max(df$'Gold'),'Country'])<br>
+}<br><br>
+
+answer_two <- function(my_df){<br>
+  diff <- get_absolute_summer_winter_diff(my_df)<br>
+  country_with_max_diff <- my_df[diff == max(diff),'Country']<br>
+  return (country_with_max_diff)<br>
+}<br><br>
+
+get_absolute_summer_winter_diff <- function(my_df){<br>
+  return (abs(my_df$'Total' - df$'Total.1'))<br>
+}<br><br>
+
+answer_three <- function(my_df){<br>
+  my_df <- filter_out_losers(my_df)<br>
+  diff <- get_relative_summer_winter_diff(my_df)<br>
+  country_with_max_diff <- my_df[diff == max(diff),'Country']<br>
+  return (country_with_max_diff)<br>
+}<br><br>
+
+filter_out_losers <- function(my_df){<br>
+  return (my_df[<br>
+    my_df$'Gold' > 0 & <br>
+      my_df$'Gold.1' > 0<br>
+    ,])<br>
+}<br><br>
+
+get_relative_summer_winter_diff <- function(my_df){<br>
+  relative_diff <- (my_df$'Gold' - my_df$'Gold.1') / my_df$'Gold.2'<br>
+  return (relative_diff)<br>
+}<br><br>
+
+answer_four <- function(my_df){<br>
+  points <- get_points(my_df)<br>
+  return (data.frame(<br>
+    Country=my_df$'Country',<br>
+    Points=points))<br>
+}<br><br>
+
+get_points <- function(my_df, gold_reward = 3, silver_reward = 2, bronze_reward = 1){<br>
+  gold_points = my_df$'Gold.2'*gold_reward<br>
+  silver_points = my_df$'Silver.2'*silver_reward<br>
+  bronze_points = my_df$'Bronze.2'*bronze_reward<br>
+  total_points = gold_points + silver_points + bronze_points<br>
+  return (total_points)<br>
+}<br><br><br>
+
+## ------------ second part --------------------<br>
+## census.csv<br><br>
+cens_file_path <- "C:\\Users\\r123a\\Desktop\\R_CourseKNU\\census.csv"<br>
+cens_df <- read.csv(census_file_path, stringsAsFactors = FALSE)<br><br>
+
+answer_five <- function(my_df){<br>
+  counties_count_by_state <- get_counties_count_by_state(my_df)<br>
+  max_counties <- max(counties_count_by_state$'COUNTY')<br>
+  state_with_max_counties <- counties_count_by_state[<br>
+    counties_count_by_state$'COUNTY' == max_counties,<br>
+    'STNAME']<br>
+  return (state_with_max_counties)<br>
+}<br><br>
+
+get_counties_count_by_state <- function(my_df){<br>
+  return (aggregate(COUNTY ~ STNAME, my_df, function(x) length(unique(x))))<br>
+}<br><br>
+
+answer_six <- function(my_df){<br>
+  my_df <- my_df[ my_df$SUMLEV != 040 ,]<br>
+  pop_by_state <- get_population_by_state(my_df)<br>
+  sorted_pop_by_state <- pop_by_state[order(-pop_by_state[,'CENSUS2010POP']), ]<br>
+  return (sorted_pop_by_state[1:3,'STNAME'])<br>
+}<br><br>
+
+get_population_by_state <- function(my_df){<br>
+  return (aggregate(CENSUS2010POP ~ STNAME, my_df, function (state) get_population_in_largest_counties(state)))<br>
+}<br><br>
+
+get_population_in_largest_counties <- function(state, largest_counties_number = 3){<br>
+  return (sum(sort(state, decreasing = TRUE)[1:largest_counties_number]))<br>
+}<br><br>
+
+answer_seven <- function(my_df){<br>
+  my_df <- my_df[ my_df$SUMLEV != 040 ,]<br>
+  changes_by_county <- get_pop_changes_by_county(my_df)<br>
+  sorted_changes_by_county <- changes_by_county[order(-changes_by_county[,'range']), ]<br>
+  return(sorted_changes_by_county[1,'CTYNAME'])<br>
+}<br><br>
+
+get_pop_changes_by_county <- function(my_df){<br>
+  columns = c("POPESTIMATE2010",<br>
+              "POPESTIMATE2011",<br>
+              "POPESTIMATE2012",<br>
+              "POPESTIMATE2013",<br>
+              "POPESTIMATE2014",<br>
+              "POPESTIMATE2015" )<br>
+  my_df$range <- apply(my_df, 1, function (county) get_county_changes_range(county[columns]))<br>
+  return (my_df[c('CTYNAME','range')])<br>
+}<br><br>
+
+get_county_changes_range <- function(county){<br>
+  estimates <- as.numeric(county)<br>
+  return (max(estimates) - min(estimates))<br>
+}<br><br>
+
+answer_eight <- function(my_df){<br>
+  filtered <- my_df[<br>
+    ( my_df$REGION == '1' | my_df$REGION == '2' ) <br>
+    & (grepl('^Washington', my_df$CTYNAME))<br>
+    & (as.numeric(my_df$POPESTIMATE2015) > as.numeric(my_df$POPESTIMATE2014))<br>
+    ,]<br><br>
+  
+  return (filtered[c("STNAME", "CTYNAME")])<br>
+}

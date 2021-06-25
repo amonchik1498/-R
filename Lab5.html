@@ -1,0 +1,55 @@
+get_filename <- function (int_val){<br>
+  return (sprintf("%03d.csv", int_val))<br>
+}<br><br>
+
+get_pollut <- function(directory, regions){<br>
+  setwd(directory)<br>
+  files <- get_filename(regions)<br>
+  pollutions_by_reg <- lapply(files, read.csv)<br>
+  return (pollutions_by_region)<br><br>
+}<br><br>
+
+pmean <- function(directory, pollutant, id = 1:332) {<br>
+  pollut_by_id <- get_pollut(directory, id)<br>
+  pollut <- do.call("rbind", pollut_by_id)<br>
+  mean_pollut <- mean(pollut[[pollutant]], na.rm=TRUE)<br>
+  return(mean_pollut)<br>
+}<br><br>
+
+complete_cases_as_vec <- function(df) {<br>
+  return (sapply(df, function(x) sum(complete.cases(x)) ))<br>
+}<br><br>
+
+complete <- function(directory, id){<br>
+  pollut <- get_pollut(directory, id)<br><br>
+  
+  complete_cases_per_id = data.frame(<br>
+    id=id,<br>
+    nobs = complete_cases_as_vec(pollut)<br>
+  )<br><br>
+  
+  return (complete_cases_per_id)<br>
+}<br><br>
+
+remove_if_na <- function(df, threshold){<br>
+  return (df[lapply(df, function (x) { sum(complete.cases(x)) > threshold}) == TRUE])<br>
+}<br><br>
+
+remove_rows_na <- function(df){<br>
+  return (lapply(df, function (x) x[complete.cases(x),]))<br>
+}<br><br>
+
+get_cor <- function(df, col1, col2){<br>
+  return (sapply(df, function(x) cor(x[[col1]], x[[col2]]) ))<br>
+}<br><br>
+
+correl <- function(directory, threshold = 0) {<br>
+  pollut <- get_pollut(directory, 1:332)<br>
+  valid_reg <- remove_if_na(pollut, threshold)<br>
+  valid_reg_without_na <- remove_rows_na(valid_reg)<br><br>
+  
+  if (length(valid_reg_without_na) == 0) { return (c()) }<br><br>
+  
+  corr <- get_correl(valid_reg_without_na, 'sulfate', 'nitrate')<br>
+  return (corr)<br>
+}
